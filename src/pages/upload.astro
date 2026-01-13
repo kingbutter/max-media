@@ -1,0 +1,47 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Upload">
+  <h1 style="margin: 22px 0 8px;">Upload</h1>
+  <p style="color:var(--muted); margin:0 0 18px;">
+    Upload images to R2. Copy the returned URL into the CMS fields.
+  </p>
+
+  <div class="card" style="padding:16px;">
+    <form id="f">
+      <div style="display:grid; gap:10px;">
+        <label class="kicker">Optional folder (e.g. posters, stills, photos/t-boy)</label>
+        <input name="path" class="btn" style="text-transform:none; width:100%;" placeholder="posters" />
+
+        <input name="file" type="file" accept="image/*" />
+
+        <button class="btn" type="submit">Upload to R2</button>
+      </div>
+    </form>
+
+    <pre id="out" style="margin-top:14px; color:var(--muted); white-space:pre-wrap;"></pre>
+  </div>
+
+  <script>
+    const f = document.getElementById("f");
+    const out = document.getElementById("out");
+
+    f.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      out.textContent = "Uploading...";
+      const fd = new FormData(f);
+
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const txt = await res.text();
+
+      if (!res.ok) {
+        out.textContent = "Upload failed:\\n" + txt;
+        return;
+      }
+
+      const json = JSON.parse(txt);
+      out.textContent = "✅ Uploaded\\nURL:\\n" + json.url;
+    });
+  </script>
+</Base>

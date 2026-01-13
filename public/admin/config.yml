@@ -1,0 +1,139 @@
+backend:
+  name: github
+  repo: kingbutter/max-media
+  branch: main
+  base_url: https://deadframe.media
+  auth_endpoint: api/auth
+
+publish_mode: editorial_workflow
+
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "-"
+
+media_library:
+  name: r2
+  config:
+    public_base: "https://assets.deadframe.media"
+    prefix: "uploads/"
+    api_base: "/api/r2"
+    sign_endpoint: "/api/r2/sign"
+
+media_folder: "unused"
+public_folder: "https://assets.deadframe.media/uploads"
+
+collections:
+  - name: "films"
+    label: "Film Projects"
+    folder: "src/content/films"
+    create: true
+    slug: "{{slug}}"
+    format: "frontmatter"
+    extension: "md"
+    fields:
+      - { name: "title", label: "Title", widget: "string" }
+      - { name: "year", label: "Year", widget: "number", value_type: "int" }
+      - { name: "role", label: "Role", widget: "string", required: false }
+      - { name: "format", label: "Format", widget: "string", required: false }
+      - { name: "camera", label: "Camera", widget: "string", required: false }
+      - { name: "featured", label: "Featured", widget: "boolean", default: false }
+
+      - label: "YouTube Video ID"
+        name: "youtubeId"
+        widget: "string"
+        required: false
+        hint: "Paste ONLY the 11-character YouTube video ID (example: dQw4w9WgXcQ). Do not paste the full URL."
+        pattern:
+          - '^[A-Za-z0-9_-]{11}$'
+          - 'Must be a valid 11-character YouTube video ID.'
+
+      # stored as strings (URLs), uses R2 media library
+      - name: "poster"
+        label: "Poster (R2)"
+        widget: "image"
+        media_library:
+          name: "r2"
+
+      - name: "stills"
+        label: "Stills (R2)"
+        widget: "list"
+        required: false
+        field:
+          label: "Still"
+          name: "still"
+          widget: "image"
+          media_library:
+            name: "r2"
+
+      - { name: "logline", label: "Logline", widget: "string", required: false }
+      - { name: "synopsis", label: "Synopsis", widget: "text", required: false }
+
+      - name: "credits"
+        label: "Credits"
+        widget: "list"
+        required: false
+        field: { label: "Credit", name: "credit", widget: "string" }
+
+      - name: "awards"
+        label: "Awards"
+        widget: "list"
+        required: false
+        field: { label: "Award", name: "award", widget: "string" }
+
+      - { name: "body", label: "Body", widget: "markdown", required: false }
+
+  - name: "photos"
+    label: "Photo Series"
+    folder: "src/content/photos"
+    create: true
+    slug: "{{slug}}"
+    format: "frontmatter"
+    extension: "md"
+    fields:
+      - { name: "title", label: "Title", widget: "string" }
+      - { name: "year", label: "Year", widget: "number", value_type: "int", required: false }
+      - { name: "featured", label: "Featured", widget: "boolean", default: false }
+
+      - name: "cover"
+        label: "Cover (R2)"
+        widget: "image"
+        media_library:
+          name: "r2"
+
+      - name: "images"
+        label: "Images (R2)"
+        widget: "list"
+        field:
+          label: "Image"
+          name: "image"
+          widget: "image"
+          media_library:
+            name: "r2"
+
+      - name: "tags"
+        label: "Tags"
+        widget: "list"
+        required: false
+
+      - { name: "notes", label: "Notes", widget: "text", required: false }
+      - { name: "body", label: "Body", widget: "markdown", required: false }
+
+  - name: "pages"
+    label: "Pages"
+    files:
+      - name: "about"
+        label: "About Page"
+        file: "src/content/pages/about.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Email", name: "email", widget: "string", required: false }
+          - { label: "YouTube URL", name: "youtube", widget: "string", required: false }
+          - label: "Primary Links"
+            name: "primaryLinks"
+            widget: "list"
+            required: false
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Href", name: "href", widget: "string" }
+          - { label: "Body", name: "body", widget: "markdown" }

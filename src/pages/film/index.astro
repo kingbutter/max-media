@@ -1,0 +1,26 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+const films = (await getCollection("films"))
+  .sort((a, b) => b.data.year - a.data.year);
+---
+<Base title="Film">
+  <h1 style="margin: 22px 0 8px;">Film</h1>
+  <p style="color:var(--muted); margin:0 0 18px;">Selected projects and trailers.</p>
+
+  <div class="grid">
+    {films.map((f) => (
+      <a class="card" href={`/film/${f.slug}`}>
+        <img src={f.data.poster} alt={`${f.data.title} poster`} loading="lazy" />
+        <div class="pad">
+          <div class="kicker">
+            {f.data.year}
+            {f.data.role ? ` • ${f.data.role}` : ""}
+          </div>
+          <div class="title">{f.data.title}</div>
+        </div>
+      </a>
+    ))}
+  </div>
+</Base>

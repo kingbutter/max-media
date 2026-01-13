@@ -1,0 +1,24 @@
+---
+/**
+ * Admin route for Decap CMS
+ * Config is still served from /admin/config.yml (in public/admin/config.yml)
+ */
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Admin</title>
+  </head>
+  <body>
+    <!-- Decap expects this container -->
+    <div id="nc-root"></div>
+
+    <!-- Load after nc-root exists -->
+    <script is:inline src="/admin/r2-media-library.js"></script>
+    <script src="https://unpkg.com/decap-cms@3.3.3/dist/decap-cms.js"></script>
+
+
+  </body>
+</html>

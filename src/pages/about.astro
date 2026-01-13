@@ -1,0 +1,34 @@
+---
+import Base from "../layouts/Base.astro";
+import { getEntry } from "astro:content";
+
+const entry = await getEntry("pages", "about");
+if (!entry) throw new Error("Missing content entry: src/content/pages/about.md");
+
+const { Content } = await entry.render();
+
+const title = entry.data.title ?? "About";
+const email = entry.data.email;
+const youtube = entry.data.youtube;
+const primaryLinks = entry.data.primaryLinks ?? [
+  { label: "Film", href: "/film" },
+  { label: "Photo", href: "/photo" },
+];
+---
+
+<Base title={title}>
+  <h1 style="margin: 22px 0 8px;">{title}</h1>
+
+  <div style="color:var(--muted); max-width: 70ch;">
+    <Content />
+  </div>
+
+  <div style="margin-top: 16px; display:flex; gap:10px; flex-wrap:wrap;">
+    {email ? <a class="btn" href={`mailto:${email}`}>Email</a> : null}
+    {youtube ? <a class="btn" href={youtube}>YouTube</a> : null}
+
+    {primaryLinks.map((l) => (
+      <a class="btn" href={l.href}>{l.label}</a>
+    ))}
+  </div>
+</Base>

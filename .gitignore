@@ -1,0 +1,33 @@
+# === Node / Astro ===
+node_modules/
+dist/
+.astro/
+
+# === Logs ===
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === OS junk ===
+.DS_Store
+Thumbs.db
+
+# === Environment variables (NEVER commit) ===
+.env
+.env.*
+!.env.example
+
+# === Editor / IDE ===
+.vscode/
+.idea/
+*.swp
+
+# === Cloudflare local tooling ===
+.wrangler/
+.wrangler.toml
+
+# === Optional: OS / temp ===
+*.tmp
+*.temp
+*.bak

@@ -1,0 +1,79 @@
+---
+import Base from "../../layouts/Base.astro";
+import YoutubeModal from "../../components/YoutubeModal.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const films = await getCollection("films");
+  return films.map((f) => ({ params: { slug: f.slug } }));
+}
+
+const films = await getCollection("films");
+const film = films.find((f) => f.slug === Astro.params.slug);
+if (!film) throw new Error("Film not found");
+
+const openOnLoad = Astro.url.hash === "#play";
+---
+<Base title={`Film • ${film.data.title}`}>
+  <div style="margin: 22px 0 10px;">
+    <div class="kicker">{film.data.year}{film.data.role ? ` • ${film.data.role}` : ""}</div>
+    <h1 style="margin: 8px 0 8px;">{film.data.title}</h1>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <a class="btn" href="#play">Play Trailer</a>
+      <a class="btn" href="/film">Back to Film</a>
+    </div>
+  </div>
+
+  <div class="heroCard" style="margin: 14px 0 18px;">
+    <a href="#play" style="display:block;">
+      <img class="heroImg" src={film.data.poster} alt={`${film.data.title} poster`} />
+    </a>
+  </div>
+
+  <div style="display:grid; gap:10px; margin-bottom: 18px; color: var(--muted);">
+    {film.data.format ? <div><span class="kicker">Format:</span> {film.data.format}</div> : null}
+    {film.data.camera ? <div><span class="kicker">Camera:</span> {film.data.camera}</div> : null}
+    {film.data.logline ? <div><span class="kicker">Logline:</span> {film.data.logline}</div> : null}
+    {film.data.synopsis ? <div><span class="kicker">Synopsis:</span> {film.data.synopsis}</div> : null}
+    {film.data.awards?.length ? (
+      <div>
+        <div class="kicker">Awards</div>
+        <ul>
+          {film.data.awards.map((a) => <li>{a}</li>)}
+        </ul>
+      </div>
+    ) : null}
+    {film.data.credits?.length ? (
+      <div>
+        <div class="kicker">Credits</div>
+        <ul>
+          {film.data.credits.map((c) => <li>{c}</li>)}
+        </ul>
+      </div>
+    ) : null}
+  </div>
+
+  {film.data.stills?.length ? (
+    <>
+      <div class="kicker">Stills</div>
+      <div class="grid">
+        {film.data.stills.map((img) => (
+          <div class="card">
+            <img src={img} alt="Film still" loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </>
+  ) : null}
+
+{film.data.youtubeId ? (
+  <YoutubeModal
+    open={openOnLoad}
+    onCloseId="filmPlayModal"
+    youtubeId={film.data.youtubeId}
+    label={film.data.title}
+    openHash="#play"
+  />
+) : null}
+</Base>

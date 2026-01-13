@@ -1,0 +1,23 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+const photos = await getCollection("photos");
+const sorted = photos.sort((a, b) => (b.data.year ?? 0) - (a.data.year ?? 0));
+---
+<Base title="Photo">
+  <h1 style="margin: 22px 0 8px;">Photo</h1>
+  <p style="color:var(--muted); margin:0 0 18px;">Series and collections.</p>
+
+  <div class="grid">
+    {sorted.map((p) => (
+      <a class="card" href={`/photo/${p.slug}`}>
+        <img src={p.data.cover} alt={`${p.data.title} cover`} loading="lazy" />
+        <div class="pad">
+          <div class="kicker">{p.data.year ?? ""}</div>
+          <div class="title">{p.data.title}</div>
+        </div>
+      </a>
+    ))}
+  </div>
+</Base>

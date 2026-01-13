@@ -1,0 +1,161 @@
+---
+// src/components/YoutubeModal.astro
+//
+// ID-only YouTube modal with validation.
+// Opens when location.hash matches openHash (default: #play).
+// Removes iframe on close so playback stops.
+
+const {
+  open = false,
+  onCloseId = 'ytModal',
+  youtubeId = '',
+  label = 'Video',
+  openHash = '#play',
+} = Astro.props;
+
+const id = String(youtubeId ?? '').trim();
+const valid = /^[A-Za-z0-9_-]{11}$/.test(id);
+const embedBase = valid ? `https://www.youtube.com/embed/${id}` : '';
+---
+
+<div
+  id={onCloseId}
+  class="ytModal"
+  data-open={open ? '1' : '0'}
+  data-hash={openHash}
+  data-embed={embedBase}
+  aria-hidden={open ? 'false' : 'true'}
+>
+  <div class="ytBackdrop" data-close tabindex="-1" aria-hidden="true"></div>
+
+  <div class="ytPanel" role="dialog" aria-modal="true" aria-label={label}>
+    <button class="ytClose" type="button" data-close aria-label="Close video">✕</button>
+
+    {valid ? (
+      <div class="ytFrame" data-frame>
+        {/* iframe injected client-side on open */}
+      </div>
+    ) : (
+      <div class="ytMissing">
+        <div class="ytMissingTitle">Invalid YouTube ID</div>
+        <p>
+          Expected an 11-character YouTube video ID (letters, numbers, <code>_</code>, or <code>-</code>).<br />
+          Current value: <code>{id || '(empty)'}</code>
+        </p>
+        <p style="margin: 0; opacity: .9;">
+          Example: <code>dQw4w9WgXcQ</code>
+        </p>
+      </div>
+    )}
+  </div>
+</div>
+
+<script is:inline data-modal-id={onCloseId}>
+(function () {
+  var script = document.currentScript;
+  var modalId = script && script.getAttribute('data-modal-id');
+  if (!modalId) return;
+
+  var modal = document.getElementById(modalId);
+  if (!modal) return;
+
+  var openHash = modal.getAttribute('data-hash') || '#play';
+  var embedBase = modal.getAttribute('data-embed') || '';
+  var frameHost = modal.querySelector('[data-frame]');
+  var closeButtons = modal.querySelectorAll('[data-close]');
+
+  function isOpenByHash() {
+    return window.location.hash === openHash;
+  }
+
+  function setOpen(open) {
+    modal.dataset.open = open ? '1' : '0';
+    modal.setAttribute('aria-hidden', open ? 'false' : 'true');
+
+    if (!frameHost) return;
+
+    if (open) {
+      frameHost.innerHTML =
+        '<iframe' +
+        ' src="' + embedBase + '?autoplay=1&rel=0"' +
+        ' title="YouTube player"' +
+        ' allow="autoplay; encrypted-media; picture-in-picture"' +
+        ' allowfullscreen' +
+        ' loading="eager"' +
+        '></iframe>';
+
+      var btn = modal.querySelector('.ytClose');
+      if (btn) btn.focus();
+    } else {
+      frameHost.innerHTML = '';
+    }
+  }
+
+  function closeModal() {
+    var url = window.location.pathname + window.location.search;
+    history.replaceState(null, '', url);
+    setOpen(false);
+  }
+
+  for (var i = 0; i < closeButtons.length; i++) {
+    closeButtons[i].addEventListener('click', function (e) {
+      e.preventDefault();
+      closeModal();
+    });
+  }
+
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.dataset.open === '1') closeModal();
+  });
+
+  window.addEventListener('hashchange', function () {
+    setOpen(isOpenByHash());
+  });
+
+  // Initial state
+  setOpen(isOpenByHash() || modal.dataset.open === '1');
+})();
+</script>
+
+<style>
+  .ytModal { display:none; position:fixed; inset:0; z-index:1000; }
+  .ytModal[data-open='1'] { display:block; }
+
+  .ytBackdrop { position:fixed; inset:0; background:rgba(0,0,0,.70); }
+
+  .ytPanel { position:fixed; inset:0; display:grid; place-items:center; padding:18px; }
+
+  .ytFrame {
+    width:min(980px, 94vw);
+    aspect-ratio:16/9;
+    background:#000;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+  }
+  .ytFrame iframe { width:100%; height:100%; border:0; display:block; }
+
+  .ytClose {
+    position:fixed; top:16px; right:16px;
+    width:44px; height:44px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(15,15,15,.65);
+    color:#fff;
+    font-size:20px;
+    cursor:pointer;
+  }
+  .ytClose:hover { background:rgba(15,15,15,.85); }
+
+  .ytMissing {
+    width:min(720px, 94vw);
+    border-radius:16px;
+    background:rgba(15,15,15,.85);
+    border:1px solid rgba(255,255,255,.12);
+    padding:18px;
+    color:#fff;
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+  }
+  .ytMissingTitle { font-weight:700; margin-bottom:6px; }
+  .ytMissing code { background:rgba(255,255,255,.10); padding:2px 6px; border-radius:8px; }
+</style>

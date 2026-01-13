@@ -1,0 +1,30 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const photos = await getCollection("photos");
+  return photos.map((p) => ({ params: { slug: p.slug } }));
+}
+
+const photos = await getCollection("photos");
+const series = photos.find((p) => p.slug === Astro.params.slug);
+if (!series) throw new Error("Photo series not found");
+---
+<Base title={`Photo • ${series.data.title}`}>
+  <div style="margin: 22px 0 10px;">
+    <div class="kicker">{series.data.year ?? ""}</div>
+    <h1 style="margin: 8px 0 8px;">{series.data.title}</h1>
+    <a class="btn" href="/photo">Back to Photo</a>
+  </div>
+
+  {series.data.notes ? <p style="color:var(--muted); max-width: 70ch;">{series.data.notes}</p> : null}
+
+  <div class="grid">
+    {series.data.images.map((img) => (
+      <div class="card">
+        <img src={img} alt={`${series.data.title} photo`} loading="lazy" />
+      </div>
+    ))}
+  </div>
+</Base>
