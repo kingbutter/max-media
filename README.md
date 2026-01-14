@@ -1,43 +1,108 @@
-# Astro Starter Kit: Minimal
+# MAX-MEDIA (DeadFrame)
 
-```sh
-npm create astro@latest -- --template minimal
+A modern, cinematic portfolio site built with **Astro**, designed for film & photography work with an **indie horror / festival screener** aesthetic.
+
+The site is fully content-managed via **Decap CMS**, deployed on **Cloudflare Pages**, and uses **Cloudflare R2** for media storage.
+
+---
+
+## ✨ Features
+
+- ⚡ **Astro** static site (fast, SEO-friendly, minimal JS)
+- 🎬 Film & photo collections with dynamic routes
+- 🩸 Indie horror–inspired UI (film grain, restrained contrast, cinematic spacing)
+- 🧑‍💼 **Decap CMS** admin for non-technical editing
+- ☁️ **Cloudflare R2** for image uploads (no vendor lock-in)
+- 📱 Fully responsive (mobile-first)
+- 🔐 Admin-only upload + editing workflow
+
+---
+
+## 📁 Project Structure
+
 ```
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
+.
+├── functions/
+│   └── api/
+│       ├── upload.js
+│       └── callback.js
 ├── public/
+│   ├── admin/
+│   │   ├── config.yml
+│   │   └── r2-media-library.js
+│   ├── favicon.svg
+│   └── global.css
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/
+│   ├── content/
+│   │   ├── films/
+│   │   ├── photos/
+│   │   └── pages/
+│   │       └── about.md
+│   ├── layouts/
+│   │   └── Base.astro
+│   ├── pages/
+│   │   ├── film/
+│   │   ├── photo/
+│   │   ├── about.astro
+│   │   └── index.astro
+│   └── styles/
+│       └── global.css
+├── astro.config.mjs
+└── README.md
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+---
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## ✍️ Content Editing
 
-Any static assets, like images, can be placed in the `public/` directory.
+The admin panel is available at `/admin` and allows editing of pages, films, photos, and media assets.
 
-## 🧞 Commands
+The About page is powered by `src/content/pages/about.md` and supports:
+- Kicker
+- Headline
+- Bio
+- Headshot (R2 upload)
+- Social links (icon-based)
+- Markdown body content
 
-All commands are run from the root of the project, from a terminal:
+---
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## 🚀 Local Development
 
-## 👀 Want to learn more?
+```
+npm install
+npm run dev
+```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Visit `http://localhost:4321`
+
+---
+
+## 🌐 Deployment
+
+Designed for **Cloudflare Pages** with Functions and R2.
+
+Build command:
+```
+npm run build
+```
+
+Output directory:
+```
+dist
+```
+
+---
+
+## 🎨 Design Philosophy
+
+Minimal UI, maximal atmosphere.
+Built to feel like a director’s notebook — not a dashboard.
+
+---
+
+## 📄 License
+
+Private / Portfolio use.
+All media © their respective owners.

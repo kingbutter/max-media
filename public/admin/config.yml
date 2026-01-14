@@ -121,19 +121,46 @@ collections:
 
   - name: "pages"
     label: "Pages"
-    files:
-      - name: "about"
-        label: "About Page"
-        file: "src/content/pages/about.md"
+    folder: "src/content/pages"
+    create: false
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Kicker", name: "kicker", widget: "string", default: "FIELD NOTES" }
+      - { label: "Headline", name: "headline", widget: "string" }
+      - { label: "Bio", name: "bio", widget: "text" }
+      - { label: "Headshot", name: "headshot", widget: "image", required: false }
+
+
+      - label: "Social Links"
+        name: "socials"
+        widget: "list"
+        summary: "{{fields.label}} • {{fields.icon}}"
         fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Email", name: "email", widget: "string", required: false }
-          - { label: "YouTube URL", name: "youtube", widget: "string", required: false }
-          - label: "Primary Links"
-            name: "primaryLinks"
-            widget: "list"
-            required: false
-            fields:
-              - { label: "Label", name: "label", widget: "string" }
-              - { label: "Href", name: "href", widget: "string" }
-          - { label: "Body", name: "body", widget: "markdown" }
+          - { label: "Label", name: "label", widget: "string" }
+          - { label: "URL", name: "href", widget: "string" }
+          - label: "Icon"
+            name: "icon"
+            widget: "select"
+            options:
+              - mail
+              - youtube
+              - film
+              - camera
+              - linkedin
+              - instagram
+              - vimeo
+
+      - { label: "Body", name: "body", widget: "markdown" }
+      
+  - name: "site"
+    label: "Site Settings"
+    files:
+      - name: "demo_reel"
+        label: "Demo Reel"
+        file: "src/content/site/demo-reel.md"
+        fields:
+          - { name: "title", label: "Title", widget: "string" }
+          - { name: "youtubeId", label: "YouTube ID", widget: "string" }
+          - { name: "poster", label: "Poster", widget: "image", required: false }

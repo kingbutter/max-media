@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import YoutubeModal from "../components/YoutubeModal.astro";
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 
 const films = await getCollection("films");
 const photos = await getCollection("photos");
@@ -9,8 +9,20 @@ const photos = await getCollection("photos");
 const featuredFilms = films.filter((x) => x.data.featured).slice(0, 6);
 const featuredPhotos = photos.filter((x) => x.data.featured).slice(0, 6);
 
-// Pick the first featured film as “reel” (or fallback to first film)
-const reel = featuredFilms[0] ?? films[0];
+// Fallback reel behavior (old logic) in case site/demo-reel isn't set up yet
+const fallbackReel = featuredFilms[0] ?? films[0];
+
+// Try to load the dedicated demo reel entry from src/content/site/demo-reel.(md|json)
+let demo: any = null;
+try {
+  demo = await getEntry("site", "demo-reel");
+} catch {
+  demo = null;
+}
+
+// Prefer dedicated demo reel values, fallback to featured film values
+const reelYoutubeId = demo?.data?.youtubeId ?? fallbackReel?.data?.youtubeId;
+const reelPoster = demo?.data?.poster ?? fallbackReel?.data?.poster;
 
 // Only used for initial render when someone lands directly on /#play.
 // Clicks to href="#play" are handled client-side inside YoutubeModal.
@@ -34,7 +46,7 @@ const openOnLoad = Astro.url.hash === "#play";
 
     <div class="heroCard">
       <a href="#play" style="display:block;">
-        <img class="heroImg" src={reel?.data.poster} alt="Demo reel poster" loading="eager" />
+        <img class="heroImg" src={reelPoster} alt="Demo reel poster" loading="eager" />
       </a>
     </div>
   </section>
@@ -69,11 +81,11 @@ const openOnLoad = Astro.url.hash === "#play";
     </div>
   </section>
 
-  {reel ? (
+  {reelYoutubeId ? (
     <YoutubeModal
       open={openOnLoad}
       onCloseId="reelModal"
-      youtubeId={reel.data.youtubeId}
+      youtubeId={reelYoutubeId}
       label="Demo Reel"
       openHash="#play"
     />

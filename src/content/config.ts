@@ -58,4 +58,13 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { films, photos, pages };
+const site = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    youtubeId: z.string().regex(/^[A-Za-z0-9_-]{11}$/),
+    poster: z.string().optional(),
+  }),
+});
+
+export const collections = { films, photos, pages, site };

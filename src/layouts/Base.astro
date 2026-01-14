@@ -11,17 +11,20 @@ const linkClass = (href) => (path === href ? "active" : "");
     <title>{title}</title>
     <link rel="stylesheet" href="/global.css" />
   </head>
-  <body>
+  <body class="site">
+    <!-- ambient texture -->
+    <div class="filmGrain" aria-hidden="true"></div>
+
     <div class="container">
       <header class="nav">
-        <div>
+        <div class="navLeft">
           <a href="/" class={linkClass("/")}>Home</a>
           <a href="/film" class={linkClass("/film")}>Film</a>
           <a href="/photo" class={linkClass("/photo")}>Photo</a>
           <a href="/about" class={linkClass("/about")}>About</a>
         </div>
-        <div>
-          <a href="/admin">Admin</a>
+        <div class="navRight">
+          <a href="/admin" class="adminLink">Admin</a>
         </div>
       </header>
 
@@ -29,8 +32,8 @@ const linkClass = (href) => (path === href ? "active" : "");
         <slot />
       </main>
 
-      <footer style="border-top:1px solid var(--border); padding: 18px 0; color: var(--muted); font-size:12px;">
-        © {new Date().getFullYear()} • Built on Astro + Cloudflare Pages
+      <footer class="footer">
+        © {new Date().getFullYear()} • Astro / Cloudflare Pages
       </footer>
     </div>
   </body>

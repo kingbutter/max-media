@@ -1,34 +1,210 @@
 ---
 import Base from "../layouts/Base.astro";
-import { getEntry } from "astro:content";
+import Content, { frontmatter } from "../content/pages/about.md";
 
-const entry = await getEntry("pages", "about");
-if (!entry) throw new Error("Missing content entry: src/content/pages/about.md");
+const {
+  title = "About",
+  kicker = "FIELD NOTES",
+  headline = "About",
+  bio = "",
+  headshot = "",
+  socials = [],
+} = frontmatter ?? {};
 
-const { Content } = await entry.render();
+function iconSvg(name) {
+  const common = `width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"`;
 
-const title = entry.data.title ?? "About";
-const email = entry.data.email;
-const youtube = entry.data.youtube;
-const primaryLinks = entry.data.primaryLinks ?? [
-  { label: "Film", href: "/film" },
-  { label: "Photo", href: "/photo" },
-];
+  switch (name) {
+    case "mail":
+      return `<svg ${common}><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>`;
+    case "youtube":
+      return `<svg ${common}><path d="M10 15V9l5 3-5 3z"/><path d="M2 12s0-4 1-6c1-2 3-2 3-2s3-.3 6-.3 6 .3 6 .3 2 0 3 2c1 2 1 6 1 6s0 4-1 6c-1 2-3 2-3 2s-3 .3-6 .3-6-.3-6-.3-2 0-3-2c-1-2-1-6-1-6z"/></svg>`;
+    case "film":
+      return `<svg ${common}><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M7 7V3h10v4"/><path d="M6 11h.01M6 15h.01M10 11h.01M10 15h.01M14 11h.01M14 15h.01M18 11h.01M18 15h.01"/></svg>`;
+    case "camera":
+      return `<svg ${common}><path d="M20 20H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3l2-3h6l2 3h3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2z"/><circle cx="12" cy="13" r="3"/></svg>`;
+    case "instagram":
+      return `<svg ${common}><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37a4 4 0 1 1-7.74 1.26 4 4 0 0 1 7.74-1.26z"/><path d="M17.5 6.5h.01"/></svg>`;
+    case "vimeo":
+      return `<svg ${common}><path d="M21 7.5c-1.2 7.4-6 11.9-8.4 11.9-2 0-2.7-3.6-4.1-8.4-.9-3.1-1.7-3.2-3.5-1.7l-1-1.2C6 6.4 7.6 5 9.1 5c2.1-.1 3.4 1.3 4.3 4.2 1.2 4.1 1.7 6.9 2.7 6.9.8 0 2.4-1.3 3.2-4 .2-1.4-.4-2.1-1.7-2.1.6-2 2.4-2.9 3.4-2.5.9.4 1.2 1.4.9 4z"/></svg>`;
+    case "linkedin":
+      return `<svg ${common}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4V9h4v2a4 4 0 0 1 2-2z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`;
+    default:
+      return `<svg ${common}><circle cx="12" cy="12" r="9"/></svg>`;
+  }
+}
 ---
 
 <Base title={title}>
-  <h1 style="margin: 22px 0 8px;">{title}</h1>
+  <section class="about">
+    <header class="hero">
+      <div style="display:flex; gap:18px; align-items:center; flex-wrap:wrap;">
+        {headshot && (
+          <img
+            src={headshot}
+            alt="Portrait"
+            loading="lazy"
+            style="
+              width:96px;
+              height:96px;
+              border-radius:16px;
+              object-fit:cover;
+              border:1px solid rgba(255,255,255,0.14);
+              box-shadow:0 10px 30px rgba(0,0,0,0.55);
+              filter: contrast(1.05) saturate(0.95);
+            "
+          />
+        )}
 
-  <div style="color:var(--muted); max-width: 70ch;">
-    <Content />
-  </div>
+        <div class="heroTop">
+          <div class="kicker">{kicker}</div>
+          <h1 class="title">
+            {headline}
+            <span class="glitch" aria-hidden="true">{headline}</span>
+          </h1>
+        </div>
+      </div>
 
-  <div style="margin-top: 16px; display:flex; gap:10px; flex-wrap:wrap;">
-    {email ? <a class="btn" href={`mailto:${email}`}>Email</a> : null}
-    {youtube ? <a class="btn" href={youtube}>YouTube</a> : null}
+      {bio && <p class="lede">{bio}</p>}
 
-    {primaryLinks.map((l) => (
-      <a class="btn" href={l.href}>{l.label}</a>
-    ))}
-  </div>
+      <div class="links" aria-label="Social links">
+        {socials.map((l) => (
+          <a class="iconLink" href={l.href} aria-label={l.label} title={l.label}>
+            <span set:html={iconSvg(l.icon)} />
+            <span class="iconText">{l.label}</span>
+          </a>
+        ))}
+      </div>
+    </header>
+
+    <div class="grid">
+      <article class="card">
+        <h2>Statement</h2>
+        <p>
+          Swap this with a 2–4 sentence “why” statement: what you make, what you chase,
+          and what you refuse to polish away.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>Capabilities</h2>
+        <ul>
+          <li>Director / DP</li>
+          <li>Camera + lighting</li>
+          <li>Still photography</li>
+          <li>Post + color</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>Contact</h2>
+        <p>
+          Best way to reach me is email. If it’s urgent, put <b>“TIME-SENSITIVE”</b> in the subject.
+        </p>
+        <a class="btnPrimary" href="mailto:sentermaxx@gmail.com">Send Email</a>
+      </article>
+    </div>
+
+    <article style="margin-top:24px; max-width:70ch; color: var(--muted);">
+      <Content />
+    </article>
+  </section>
+
+  <style>
+    .about { padding: 18px 0 42px; max-width: 1100px; margin: 0 auto; }
+
+    .about article p { margin-bottom: 1em; }
+    .about article h2 { margin-top: 1.6em; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+    .hero {
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 18px;
+      padding: 22px;
+      overflow: hidden;
+      background:
+        radial-gradient(900px 400px at 10% 0%, rgba(255,255,255,0.06), transparent 55%),
+        radial-gradient(700px 300px at 90% 10%, rgba(255,255,255,0.05), transparent 60%),
+        linear-gradient(180deg, rgba(10,10,12,0.65), rgba(10,10,12,0.25));
+      box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.03),
+          rgba(255,255,255,0.03) 1px,
+          transparent 1px,
+          transparent 3px
+        );
+      opacity: 0.25;
+      mix-blend-mode: overlay;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,0.08), transparent 35%),
+        radial-gradient(circle at 70% 0%, rgba(255,255,255,0.05), transparent 40%),
+        radial-gradient(circle at 50% 120%, rgba(255,255,255,0.04), transparent 45%);
+      opacity: 0.55;
+    }
+
+    .heroTop { display:flex; align-items:baseline; justify-content:space-between; gap:14px; position:relative; z-index:1; }
+    .kicker {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.25);
+    }
+    .title { margin: 10px 0 8px; font-size: clamp(28px, 3.6vw, 44px); line-height: 1.05; position: relative; z-index: 1; }
+    .glitch { position:absolute; left:0; top:0; opacity:0.16; transform: translate(2px, 1px); filter: blur(0.2px); pointer-events:none; }
+    .lede { margin: 8px 0 16px; color: var(--muted); max-width: 70ch; position: relative; z-index: 1; }
+
+    .links { display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; position:relative; z-index:1; }
+    .iconLink {
+      display:inline-flex; align-items:center; gap:10px; padding:10px 12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,0.12); background:rgba(0,0,0,0.25); text-decoration:none; color:inherit;
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+      backdrop-filter: blur(8px);
+    }
+    .iconLink:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.04); }
+    .iconLink:active { transform: translateY(0px); }
+    .iconLink svg { opacity: 0.9; }
+    .iconText { font-size: 14px; letter-spacing: 0.01em; }
+
+    .grid { display:grid; grid-template-columns: 1fr; gap:14px; margin-top:16px; }
+    @media (min-width: 860px) { .grid { grid-template-columns: 1.2fr 0.9fr 0.9fr; } }
+
+    .card {
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 18px;
+      padding: 18px;
+      background: rgba(0,0,0,0.18);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+    }
+    .card h2 { margin: 0 0 8px; font-size: 16px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .card p, .card li { color: var(--muted); }
+    .card ul { margin: 10px 0 0 18px; }
+
+    .btnPrimary {
+      display:inline-flex; align-items:center; justify-content:center; margin-top:10px; padding:10px 14px;
+      border-radius:12px; border:1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.06);
+      text-decoration:none; color:inherit;
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+    }
+    .btnPrimary:hover { transform: translateY(-1px); background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.24); }
+  </style>
 </Base>

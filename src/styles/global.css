@@ -7,14 +7,40 @@
 }
 
 * { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
 
 a { color: inherit; text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
-.nav { display: flex; gap: 16px; align-items: center; justify-content: space-between; padding: 18px 0; border-bottom: 1px solid var(--border); }
-.nav a { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: var(--muted); }
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.nav {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav a {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--muted);
+}
+
 .nav a.active { color: var(--fg); }
 
 .hero {
@@ -22,39 +48,109 @@ a:hover { text-decoration: underline; }
   gap: 18px;
   padding: 28px 0;
 }
+
 .heroCard {
   border: 1px solid var(--border);
   background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
   border-radius: 18px;
   overflow: hidden;
 }
+
 .heroImg { width: 100%; height: auto; display: block; }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 18px 0 40px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 18px 0 40px;
+}
+
 .card {
   border: 1px solid var(--border);
   background: var(--card);
   border-radius: 16px;
   overflow: hidden;
 }
+
 .card img { width: 100%; display: block; }
 .card .pad { padding: 12px 12px 14px; }
 .kicker { color: var(--muted); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
 .title { font-size: 16px; margin-top: 6px; font-weight: 650; }
 
-.modalBackdrop {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
-  display: flex; align-items: center; justify-content: center;
-  padding: 20px;
+/* ===========
+   CINEMA MODAL
+   =========== */
+
+.modalBackdrop{
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* tighter framing so the video feels bigger */
+  padding: 10px;
+
+  /* lights-down */
+  background: rgba(0,0,0,0.88);
+
+  /* “theater air” */
+  backdrop-filter: blur(7px) saturate(0.9);
+
+  z-index: 9999;
 }
+
+/* vignette + subtle “projector spill” */
+.modalBackdrop::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    radial-gradient(ellipse at center,
+      rgba(0,0,0,0.08) 0%,
+      rgba(0,0,0,0.60) 55%,
+      rgba(0,0,0,0.94) 100%),
+    radial-gradient(circle at 50% 40%,
+      rgba(255,255,255,0.07) 0%,
+      rgba(255,255,255,0.00) 58%);
+
+  mix-blend-mode: normal;
+}
+
+/* IMPORTANT: Make the modal a flex column so the video can expand */
 .modal {
-  width: min(980px, 100%);
+  position: relative;
+  width: min(1600px, 98vw);     /* bigger on desktop */
+  height: min(92vh, 980px);     /* ensures it can actually get tall */
+  display: flex;
+  flex-direction: column;
+
   border: 1px solid var(--border);
   background: #0b0b10;
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
+
+  /* cinema pop */
+  transform: translateY(6px) scale(0.985);
+  opacity: 0;
+  animation: modalIn 160ms ease-out forwards;
 }
-.modalTop { display:flex; justify-content: space-between; align-items:center; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+
+@keyframes modalIn{
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.modalTop {
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  flex: 0 0 auto;
+}
+
 .btn {
   border: 1px solid var(--border);
   background: rgba(255,255,255,0.06);
@@ -64,5 +160,24 @@ a:hover { text-decoration: underline; }
   cursor: pointer;
 }
 .btn:hover { background: rgba(255,255,255,0.10); }
-.embed { aspect-ratio: 16/9; width: 100%; }
-.embed iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+/* IMPORTANT: Let the embed fill the remaining modal height */
+.embed {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0; /* prevents flex overflow issues */
+}
+
+/* Make iframe fill the embed area */
+.embed iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* Slightly different sizing for small screens */
+@media (max-width: 520px) {
+  .modalBackdrop { padding: 8px; }
+  .modal { height: 90vh; border-radius: 16px; }
+}
