@@ -1,93 +1,23 @@
 ---
-import Base from "../layouts/Base.astro";
-import YoutubeModal from "../components/YoutubeModal.astro";
-import { getCollection, getEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
 
-const films = await getCollection("films");
 const photos = await getCollection("photos");
-
-const featuredFilms = films.filter((x) => x.data.featured).slice(0, 6);
-const featuredPhotos = photos.filter((x) => x.data.featured).slice(0, 6);
-
-// Fallback reel behavior (old logic) in case site/demo-reel isn't set up yet
-const fallbackReel = featuredFilms[0] ?? films[0];
-
-// Try to load the dedicated demo reel entry from src/content/site/demo-reel.(md|json)
-let demo: any = null;
-try {
-  demo = await getEntry("site", "demo-reel");
-} catch {
-  demo = null;
-}
-
-// Prefer dedicated demo reel values, fallback to featured film values
-const reelYoutubeId = demo?.data?.youtubeId ?? fallbackReel?.data?.youtubeId;
-const reelPoster = demo?.data?.poster ?? fallbackReel?.data?.poster;
-
-// Only used for initial render when someone lands directly on /#play.
-// Clicks to href="#play" are handled client-side inside YoutubeModal.
-const openOnLoad = Astro.url.hash === "#play";
+const sorted = photos.sort((a, b) => (b.data.year ?? 0) - (a.data.year ?? 0));
 ---
+<Base title="Photo">
+  <h1 style="margin: 22px 0 8px;">Photo</h1>
+  <p style="color:var(--muted); margin:0 0 18px;">Series and collections.</p>
 
-<Base title="Portfolio">
-  <section class="hero">
-    <div>
-      <div class="kicker">Digital Media • Film • Photo</div>
-      <h1 style="margin:10px 0 6px; font-size: 34px;">Cinematic portfolio</h1>
-      <p style="margin:0; color:var(--muted); max-width: 60ch;">
-        Short films, narrative work, and photo series. Click to watch the reel.
-      </p>
-      <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-        <a class="btn" href="#play">Play Demo Reel</a>
-        <a class="btn" href="/film">Browse Film</a>
-        <a class="btn" href="/photo">Browse Photo</a>
-      </div>
-    </div>
-
-    <div class="heroCard">
-      <a href="#play" style="display:block;">
-        <img class="heroImg" src={reelPoster} alt="Demo reel poster" loading="eager" />
+  <div class="grid">
+    {sorted.map((p) => (
+      <a class="card" href={`/photo/${p.slug}`}>
+        <img src={p.data.cover} alt={`${p.data.title} cover`} loading="lazy" />
+        <div class="pad">
+          <div class="kicker">{p.data.year ?? ""}</div>
+          <div class="title">{p.data.title}</div>
+        </div>
       </a>
-    </div>
-  </section>
-
-  <section>
-    <div class="kicker">Featured Film</div>
-    <div class="grid">
-      {featuredFilms.map((f) => (
-        <a class="card" href={`/film/${f.slug}`}>
-          <img src={f.data.poster} alt={`${f.data.title} poster`} loading="lazy" />
-          <div class="pad">
-            <div class="kicker">{f.data.year}{f.data.role ? ` • ${f.data.role}` : ""}</div>
-            <div class="title">{f.data.title}</div>
-          </div>
-        </a>
-      ))}
-    </div>
-  </section>
-
-  <section>
-    <div class="kicker">Featured Photo</div>
-    <div class="grid">
-      {featuredPhotos.map((p) => (
-        <a class="card" href={`/photo/${p.slug}`}>
-          <img src={p.data.cover} alt={`${p.data.title} cover`} loading="lazy" />
-          <div class="pad">
-            <div class="kicker">{p.data.year ?? ""}</div>
-            <div class="title">{p.data.title}</div>
-          </div>
-        </a>
-      ))}
-    </div>
-  </section>
-
-  {reelYoutubeId ? (
-    <YoutubeModal
-      open={openOnLoad}
-      onCloseId="reelModal"
-      youtubeId={reelYoutubeId}
-      label="Demo Reel"
-      openHash="#play"
-    />
-  ) : null}
+    ))}
+  </div>
 </Base>
