@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import AboutPage from "../content/pages/about.md";
+import Content, { frontmatter } from "../content/pages/about.md";
 
 const {
   title = "About",
@@ -9,9 +9,7 @@ const {
   bio = "",
   headshot = "",
   socials = [],
-} = AboutPage.frontmatter;
-
-const Content = AboutPage;
+} = frontmatter ?? {};
 
 function iconSvg(name) {
   const common = `width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -68,9 +66,7 @@ function iconSvg(name) {
         </div>
       </div>
 
-      {bio && (
-        <p class="lede">{bio}</p>
-      )}
+      {bio && <p class="lede">{bio}</p>}
 
       <div class="links" aria-label="Social links">
         {socials.map((l) => (
