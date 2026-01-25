@@ -1,9 +1,18 @@
 ---
 title: About
-headline: About
 kicker: FIELD NOTES
-bio: Replace this with your bio — short, sharp, and a little unsettling.
-headshot: ""  # use CMS image picker (R2) if desired
+headline: About
+bio: >-
+  Hi, I'm Max! I'm a photographer and filmmaker based in Indiana.
+
+
+
+  I enjoy shooting projects that allow me to express unique elements of style, color, and aesthetics. I specifically enjoy working within the genres of horror and surrealism.​​
+
+
+
+  If you're looking for a unique approach, or want to create something that goes against the norm, I'm your person :)
+headshot: ""
 socials:
   - label: Email
     href: mailto:sentermaxx@gmail.com
