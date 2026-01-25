@@ -12,7 +12,7 @@ bio: >-
 
 
   If you're looking for a unique approach, or want to create something that goes against the norm, I'm your person :)
-headshot: ""
+headshot: https://assets.deadframe.media/uploads/2026-01/1769355528333-Adobe_Express_-_file_19_.png
 socials:
   - label: Email
     href: mailto:sentermaxx@gmail.com
@@ -33,7 +33,6 @@ socials:
     href: /photo
     icon: camera
 ---
-
 ## Statement
 
-Swap this markdown with whatever you want. This is the body content Decap can edit too.
+As a filmmaker, I want to talk about subjects that may be considered more taboo, such as queer and trans identities. While my identity as a trans person will inevitably inform my perspective as a filmmaker, I wish to include aspects of transness in a normalized way, that doesn’t place the entire onus of a story onto the fact that trans identity is being discussed. My works discuss gender identity, but it’s much larger than that. I explore what it means to experience one of the most basic human emotions; fear. How do we respond to it? How do we overcome it (if we even can at all)?
