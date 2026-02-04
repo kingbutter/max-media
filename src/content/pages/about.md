@@ -32,7 +32,6 @@ socials:
   - label: Photo
     href: /photo
     icon: camera
+statement: >-
+  As a filmmaker, I want to talk about subjects that may be considered more taboo, such as queer and trans identities. While my identity as a trans person will inevitably inform my perspective as a filmmaker, I wish to include aspects of transness in a normalized way, that doesn't place the entire onus of a story onto the fact that trans identity is being discussed. My works discuss gender identity, but it's much larger than that. I explore what it means to experience one of the most basic human emotions; fear. How do we respond to it? How do we overcome it (if we even can at all)?
 ---
-## Statement
-
-As a filmmaker, I want to talk about subjects that may be considered more taboo, such as queer and trans identities. While my identity as a trans person will inevitably inform my perspective as a filmmaker, I wish to include aspects of transness in a normalized way, that doesn’t place the entire onus of a story onto the fact that trans identity is being discussed. My works discuss gender identity, but it’s much larger than that. I explore what it means to experience one of the most basic human emotions; fear. How do we respond to it? How do we overcome it (if we even can at all)?
