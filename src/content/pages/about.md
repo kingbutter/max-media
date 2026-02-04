@@ -32,6 +32,11 @@ socials:
   - label: Photo
     href: /photo
     icon: camera
+capabilities:
+  - Director / DP
+  - Camera + lighting
+  - Still photography
+  - Post + color
 ---
 ## Statement
 

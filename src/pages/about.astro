@@ -9,6 +9,7 @@ const {
   bio = "",
   headshot = "",
   socials = [],
+  capabilities = [],
 } = frontmatter ?? {};
 
 function iconSvg(name) {
@@ -90,10 +91,7 @@ function iconSvg(name) {
       <article class="card">
         <h2>Capabilities</h2>
         <ul>
-          <li>Director / DP</li>
-          <li>Camera + lighting</li>
-          <li>Still photography</li>
-          <li>Post + color</li>
+          {capabilities.map((cap) => <li>{cap}</li>)}
         </ul>
       </article>
 

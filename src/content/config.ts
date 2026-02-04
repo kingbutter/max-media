@@ -49,12 +49,16 @@ const pages = defineCollection({
   type: "content",
   schema: z.object({
     title: z.string(),
-    email: z.string().email().optional(),
-    youtube: z.string().url().optional(),
-    primaryLinks: z.array(z.object({
+    kicker: z.string().optional(),
+    headline: z.string().optional(),
+    bio: z.string().optional(),
+    headshot: z.string().optional(),
+    socials: z.array(z.object({
       label: z.string(),
       href: z.string(),
+      icon: z.string(),
     })).optional(),
+    capabilities: z.array(z.string()).optional(),
   }),
 });
 

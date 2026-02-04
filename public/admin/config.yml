@@ -152,6 +152,12 @@ collections:
               - instagram
               - vimeo
 
+      - label: "Capabilities"
+        name: "capabilities"
+        widget: "list"
+        required: false
+        field: { label: "Capability", name: "capability", widget: "string" }
+
       - { label: "Body", name: "body", widget: "markdown" }
       
   - name: "site"
